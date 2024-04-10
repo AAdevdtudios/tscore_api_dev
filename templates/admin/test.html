@@ -1,0 +1,15 @@
+{%extends "admin/base_site.html"%} {% load i18n l10n admin_urls static %}
+{%block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+  &rsaquo;
+  <a href="{% url 'admin:index' %}">Confirm</a>
+</div>
+{% endblock %} {%block content%}
+<form action="" method="post">
+  {% csrf_token %}
+  <input type="hidden" name="action" value="send_notification" />
+  {% for user in users %} {{user}} {% endfor %} {{ user.as_p }}
+  <input type="submit" name="apply" value="Send Notification" />
+</form>
+{% endblock %}

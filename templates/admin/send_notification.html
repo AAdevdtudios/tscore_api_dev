@@ -1,0 +1,17 @@
+{% extends "admin/base_site.html" %} {% load static%} {% block content %}
+
+<form method="POST">
+  <ul class="list-group list-group-horizontal">
+    {% for user in users %}
+    <li class="list-group-item">{{user.email}}</li>
+    {% endfor %}
+  </ul>
+  {% csrf_token %}
+  <div>
+    {{form|crispy}} {{ block.super }}
+
+    <input type="hidden" name="action" value="notification" />
+    <input type="submit" name="apply" value="Send Notification" />
+  </div>
+</form>
+{% endblock %}

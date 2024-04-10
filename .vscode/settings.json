@@ -1,0 +1,12 @@
+{
+  "cSpell.words": [
+    "corsheaders",
+    "paystack",
+    "PAYSTACKPKKEY",
+    "PAYSTACKSCKEY",
+    "pyotp",
+    "SUBSCRIPTIONTYPE",
+    "TOTP"
+  ],
+  "sqltools.connections": []
+}
