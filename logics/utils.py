@@ -12,6 +12,8 @@ import firebase_admin
 from firebase_admin import credentials
 
 from core.settings import RESEND_KEY, API_FCM, INFOS, SCOPES
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 
 paystack_secret_key = settings.PAYSTACKSCKEY
 resendKey = RESEND_KEY
@@ -27,22 +29,24 @@ def CreatePlan(interval: str, name: str, amount: int):
 
 def CheckNextDueDate(code: str):
     data = paystack.subscription.fetch(code)
-    if data["data"]["cancelledAt"] != None:
-        dueDate = data["data"]["cancelledAt"]
-    else:
-        dueDate = data["data"]["next_payment_date"]
+    print(data)
     email_token = data["data"]["email_token"]
 
-    if dueDate is None:
-        return False
-    current_date = datetime.now()
-    provided_date = datetime.fromisoformat(dueDate.replace("Z", "+00:00"))
+    if data["data"]["status"] in ("complete", "non-renewing"):
+        response = {
+            "email_token": email_token,
+            "is_subscribed": False,
+        }
+        return response
     response = {
         "email_token": email_token,
-        "is_subscribed": current_date.date() <= provided_date.date(),
+        "is_subscribed": True,
     }
 
     return response
+
+
+from django.utils.html import strip_tags
 
 
 def send_email(
@@ -51,13 +55,25 @@ def send_email(
     html: str,
     # emailId: int | None,
 ) -> bool:
-    params = {
-        "from": "info <info@tscore.ng>",
-        "to": [email],
-        "subject": subject,
-        "html": html,
-    }
-    resend.Emails.send(params)
+    msg = EmailMultiAlternatives(
+        subject,
+        strip_tags(html),
+        settings.EMAIL_HOST_USER,
+        [
+            email,
+        ],
+    )
+    msg.attach_alternative(html, "text/html")
+    msg.send()
+
+    return True
+    # params = {
+    #     "from": "info <info@tscore.ng>",
+    #     "to": [email],
+    #     "subject": subject,
+    #     "html": html,
+    # }
+    # resend.Emails.send(params)
 
 
 def get_filename(filename, request):

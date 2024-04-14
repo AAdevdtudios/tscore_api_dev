@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework.generics import GenericAPIView
+
+from logics.utils import CheckNextDueDate
 from .serializer import (
     SendVerifyToken,
     UserRegisterSerializer,
@@ -198,6 +200,10 @@ class GetData(GenericAPIView):
 
     def get(self, request):
         user = get_object_or_404(User, email=request.user)
+        data = CheckNextDueDate(user.subscriptionCode)
+        user.is_subscribed = data["is_subscribed"]
+        user.email_token = data["email_token"]
+        user.save()
         serializer = self.serializer_class(instance=user)
 
         return Response(data=serializer.data, status=200)

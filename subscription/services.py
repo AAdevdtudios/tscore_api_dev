@@ -73,6 +73,7 @@ def SubscribeUser(email: str, planName: str):
 
 # invoice.create invoice.payment_failed invoice.update subscription.create subscription.disable subscription.not_renew charge.success
 def EventActions(event, data):
+    print(data)
     if event == "subscription.create":
         _subscriptionService(data=data)
         return "Subscription create"
@@ -90,6 +91,7 @@ def EventActions(event, data):
         _notRenew(data)
         return event
     if event == "charge.success":
+        _onRenew(data)
         return event
     return "Not created"
 
@@ -109,6 +111,7 @@ def _notRenew(data):
             subscription_code=data["data"]["subscription_code"]
         )
         code.status = "no_renew"
+        code.user.is_subscribed = False
         code.save()
         return True
     except:
