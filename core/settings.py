@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
+
+# import dj_database_url
 import environ
 from pathlib import Path
 from datetime import timedelta
@@ -47,6 +49,13 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "unfold",  # before django.contrib.admin
+    "unfold.contrib.filters",  # optional, if special filters are needed
+    "unfold.contrib.forms",  # optional, if special form elements are needed
+    "unfold.contrib.inlines",  # optional, if special inlines are needed
+    "unfold.contrib.import_export",  # optional, if django-import-export package is used
+    "unfold.contrib.guardian",  # optional, if django-guardian package is used
+    "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -99,11 +108,11 @@ TEMPLATES = [
     },
 ]
 
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# SECURE_SSL_REDIRECT = True
 
 WSGI_APPLICATION = "core.wsgi.application"
-
+X_FRAME_OPTIONS = "ALLOW-FROM http://localhost:3000/"
 CORS_ALLOW_ALL_ORIGINS = True
 
 
@@ -111,17 +120,22 @@ CORS_ALLOW_ALL_ORIGINS = True
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("NAME"),
-        "USER": env("USER"),
-        "PASSWORD": env("PASSWORD"),
-        "HOST": env("HOST"),
-        "PORT": env("PORT"),
-        "OPTIONS": {"sslmode": "require"},
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-# DATABASES["default"] = dj_database_url.parse(env("DBPOSTGRES"))
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": env("NAME"),
+#         "USER": env("USER"),
+#         "PASSWORD": env("PASSWORD"),
+#         "HOST": env("HOST"),
+#         "PORT": env("PORT"),
+#     }
+# }
+# DATABASES["default"] = dj_database_url.parse(env("DATABASE_URL"))
 
 AUTH_USER_MODEL = "account.User"
 
@@ -190,6 +204,7 @@ SOCIAL_AUTH_PASSWORD = env("SOCIAL_AUTH_PASSWORD")
 PAYSTACKSCKEY = env("PAYSTACKSCKEY")
 PAYSTACKPKKEY = env("PAYSTACKPKKEY")
 WEBSITEURL = env("WEBSITEURL")
+IMG = env("IMG")
 # Resend Key
 RESEND_KEY = env("RESENDKEY")
 API_FCM = env("API_FCM")

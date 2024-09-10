@@ -9,6 +9,7 @@ from logics.utils import send_email
 
 # resend.api_key = os.environ["RESEND_KEY"]
 from .models import OneTimePassword, User
+from django.conf import settings
 
 confirm_user_email = """
 Hi [name],
@@ -31,7 +32,10 @@ def send_verification_email(
     subject: str = "Verify Account",
     render: str = "verification-email.html",
 ):
+    data["img"] = settings.IMG
+    data["redirect"] = settings.WEBSITEURL
     html_content = render_to_string(render, data)
+    print(html_content)
     send_email(email=email, subject=subject, html=html_content)
 
 

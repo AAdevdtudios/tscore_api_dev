@@ -30,6 +30,7 @@ def CreatePlan(interval: str, name: str, amount: int):
 def CheckNextDueDate(code: str):
     data = paystack.subscription.fetch(code)
     print(data)
+
     email_token = data["data"]["email_token"]
 
     if data["data"]["status"] in ("complete", "non-renewing"):

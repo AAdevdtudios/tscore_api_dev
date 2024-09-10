@@ -48,13 +48,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            email=validated_data["email"],
-            first_name=validated_data["first_name"],
-            last_name=validated_data["last_name"],
-            password=validated_data["password"],
-            notification_id=validated_data["notification_id"],
-        )
+        validated_data.pop("isWebsite")
+        validated_data.pop("notification_id")
+        validated_data.pop("password2")
+        user = User.objects.create_user(**validated_data)
+        print(user)
 
         return user
 

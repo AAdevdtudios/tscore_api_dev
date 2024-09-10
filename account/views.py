@@ -71,8 +71,9 @@ class RegisterUserView(GenericAPIView):
 
         if serializer.is_valid(raise_exception=True):
             # This would be sent if it was Website
-            serializer.save()
+            user_tokens = serializer.save()
             user = serializer.data
+            data = {"email": user["email"]}
             if serializer.validated_data["isWebsite"]:
                 data = {"email": user["email"]}
                 send_verification = SendVerifyToken(
@@ -88,7 +89,7 @@ class RegisterUserView(GenericAPIView):
             # Send email function
             return Response(
                 {
-                    # "data": user,
+                    "data": user,
                     "message": f"Hi {first_name} thanks for signing up a pass code has been sent to your email",
                 },
                 status=200,
@@ -202,7 +203,7 @@ class GetData(GenericAPIView):
         user = get_object_or_404(User, email=request.user)
         data = CheckNextDueDate(user.subscriptionCode)
         user.is_subscribed = data["is_subscribed"]
-        user.email_token = data["email_token"]
+        # user.email_token = data["email_token"]
         user.save()
         serializer = self.serializer_class(instance=user)
 
