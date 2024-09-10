@@ -38,12 +38,10 @@ DEBUG = env("Debug")
 
 
 ALLOWED_HOSTS = ["*"]
-# CSRF_TRUSTED_ORIGINS = [
-#     "https://*.onrender.com",
-#     "http://*.127.0.0.1",
-#     "http://*.3281-102-89-33-217.ngrok-free.app",
-#     "https://3281-102-89-33-217.ngrok-free.app/",
-# ]
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.onrender.com",
+    "http://*.127.0.0.1"
+]
 
 
 # Application definition
