@@ -35,6 +35,8 @@ class UserManager(BaseUserManager):
             email=email, first_name=first_name, last_name=last_name, **extra_fields
         )
         user.subscriber_number = str(self.generate_random())
+        user.is_verified = True
+        user.is_active=True
         user.set_password(password)
         user.save(using=self._db)
         return user

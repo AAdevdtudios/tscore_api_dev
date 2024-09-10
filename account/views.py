@@ -73,6 +73,10 @@ class RegisterUserView(GenericAPIView):
             # This would be sent if it was Website
             user_tokens = serializer.save()
             user = serializer.data
+            print("User info")
+            print(user)
+            print("Email")
+            print(user_tokens.email)
             data = {"email": user["email"]}
             if serializer.validated_data["isWebsite"]:
                 data = {"email": user["email"]}
